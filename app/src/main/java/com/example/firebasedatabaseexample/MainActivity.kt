@@ -12,6 +12,7 @@ class MainActivity : AppCompatActivity() {
 
     var btnAddUser: Button? = null
     var btnUpdate: Button? = null
+    var btnRemove: Button? = null
     var etName: EditText? = null
     var etLastName: EditText? = null
 
@@ -19,10 +20,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btnAddUser = findViewById(R.id.btnAddUser)
-        btnUpdate = findViewById(R.id.btnUpdate)
-        etName = findViewById(R.id.etName)
-        etLastName = findViewById(R.id.etLastName)
+        init()
 
         btnAddUser?.setOnClickListener {
             val name = etName?.text.toString()
@@ -53,5 +51,20 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+        btnRemove?.setOnClickListener {
+
+        }
+
+        DataBase.getUsers()
+
+    }
+
+    private fun init(){
+        btnAddUser = findViewById(R.id.btnAddUser)
+        btnUpdate = findViewById(R.id.btnUpdate)
+        btnRemove = findViewById(R.id.btnRemove)
+        etName = findViewById(R.id.etName)
+        etLastName = findViewById(R.id.etLastName)
     }
 }
