@@ -1,5 +1,6 @@
 package com.example.firebasedatabaseexample.data.firebasedatabase
 
+import android.util.Log
 import com.example.firebasedatabaseexample.domain.models.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
@@ -23,8 +24,14 @@ class UserDataBase {
     fun addUser(user: User): Task<Void> = database.push().setValue(user)
 
     fun updateUserData(kay: User,name: String,lastName: String): Task<Void> {
+
         val map = mapOf(KAY_USER_NAME to name, KAY_USER_LASTNAME to lastName)
-        return database.child(kay.userId.toString()).updateChildren(map)
+
+        
+
+        return database.child(kay.userId.toString()).updateChildren(map).addOnSuccessListener {
+            Log.d(UserDataBase::class.java.simpleName,"update success")
+        }
     }
 
     fun getUsers(resultCallback: (List<User>) -> Unit) {
@@ -78,8 +85,8 @@ class UserDataBase {
 
     companion object{
         private const val USERS = "users"
-        private const val KAY_USER_NAME = "user_name"
-        private const val KAY_USER_LASTNAME = "user_lastname"
+        private const val KAY_USER_NAME = "name"
+        private const val KAY_USER_LASTNAME = "lastname"
     }
 }
 

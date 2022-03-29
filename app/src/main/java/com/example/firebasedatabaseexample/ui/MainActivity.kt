@@ -16,8 +16,6 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var btnUpdate: Button? = null
-    private var btnRemove: Button? = null
     private var etName: EditText? = null
     private var etLastName: EditText? = null
     private var btnAddUser: Button? = null
@@ -33,21 +31,6 @@ class MainActivity : AppCompatActivity() {
 
         btnAddUser?.setOnClickListener {
             saveUser()
-        }
-
-        btnUpdate?.setOnClickListener {
-            userDataBase.getUsers { usersList ->
-                usersList.forEach { user ->
-                    userDataBase.updateUserData(
-                        user,
-                        etName?.text.toString(),
-                        etLastName?.text.toString()
-                    ).addOnSuccessListener {
-                        Toast.makeText(this, "user data update", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-
         }
     }
 
@@ -71,8 +54,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRecycleView() {
-        userRecycleView = findViewById<
-                RecyclerView>(R.id.userRecyclerView).apply {
+        userRecycleView = findViewById<RecyclerView>(R.id.userRecyclerView).apply {
             val userAdapter = UserAdapter()
             adapter = userAdapter
 
@@ -82,6 +64,13 @@ class MainActivity : AppCompatActivity() {
 
             userAdapter.adapterClickListener = UserClickListener { user ->
                 userDataBase.removeUserWithUserId(user.userId)
+            }
+
+            userAdapter.adapterClickListener = UserClickListener {user ->
+                val userDialogFragment = UserDialogFragment()
+                val bundle = Bundle()
+                bundle.putParcelable(USER_BUNDLE_KAY,user)
+                userDialogFragment.show(supportFragmentManager,UserDialogFragment::class.java.simpleName)
             }
 
             userDataBase.userDataChangeListener = {
@@ -94,9 +83,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun init() {
         btnAddUser = findViewById(R.id.btnAddUser)
-        btnUpdate = findViewById(R.id.btnUpdate)
-        btnRemove = findViewById(R.id.btnRemove)
         etName = findViewById(R.id.etName)
         etLastName = findViewById(R.id.etLastName)
+    }
+
+    companion object{
+        const val USER_BUNDLE_KAY = "user_bundle_kay"
     }
 }

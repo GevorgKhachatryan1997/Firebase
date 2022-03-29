@@ -18,6 +18,10 @@ class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         btnDelete.setOnClickListener {
             user?.let { userClickListener?.userClickListener(it) }
         }
+
+        tvUser.setOnClickListener {
+            user?.let { userClickListener?.userClickListener(it) }
+        }
     }
 
     fun bind(user: User) {
