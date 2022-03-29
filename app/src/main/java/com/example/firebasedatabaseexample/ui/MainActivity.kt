@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firebasedatabaseexample.R
 import com.example.firebasedatabaseexample.data.firebasedatabase.UserDataBase
-import com.example.firebasedatabaseexample.ui.userList.UserAdapter
 import com.example.firebasedatabaseexample.domain.models.User
+import com.example.firebasedatabaseexample.ui.userList.UserAdapter
 import com.example.firebasedatabaseexample.ui.userList.UserClickListener
 import java.util.*
 
@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private var etLastName: EditText? = null
     private var btnAddUser: Button? = null
     private var userRecycleView: RecyclerView? = null
+    private val userDataBase = UserDataBase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +38,9 @@ class MainActivity : AppCompatActivity() {
         btnUpdate?.setOnClickListener {
             val map = mapOf("name" to etName?.text.toString(), "lastname" to etLastName?.text.toString())
 
-            UserDataBase.getUsers {usersList ->
+            userDataBase.getUsers {usersList ->
                 usersList.forEach {user ->
-                    UserDataBase.updateUserData(user.userId.toString(), map).addOnSuccessListener {
+                    userDataBase.updateUserData(user, map).addOnSuccessListener {
                         Toast.makeText(this, "user data update", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -58,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             val user = User(name, lastName, userId)
 
-            UserDataBase.addUser(user)
+            userDataBase.addUser(user)
                 .addOnSuccessListener {
                     Toast.makeText(this, "user added", Toast.LENGTH_SHORT).show()
                 }.addOnFailureListener {
@@ -72,15 +73,15 @@ class MainActivity : AppCompatActivity() {
             val userAdapter = UserAdapter()
             adapter = userAdapter
 
-            UserDataBase.getUsers { listUsers ->
+            userDataBase.getUsers { listUsers ->
                 userAdapter.update(listUsers)
             }
 
             userAdapter.adapterClickListener = UserClickListener { user ->
-                UserDataBase.removeUserWithUserId(user.userId)
+                userDataBase.removeUserWithUserId(user.userId)
             }
 
-            UserDataBase.userDataChangeListener = {
+            userDataBase.userDataChangeListener = {
                 userAdapter.update(it)
             }
 

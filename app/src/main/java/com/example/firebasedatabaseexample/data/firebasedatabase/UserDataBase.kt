@@ -6,10 +6,7 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-// Create simple class
-object UserDataBase {
-    // Change name
-    private const val USERS = "users"
+class UserDataBase {
 
     var userDataChangeListener: ((List<User>) -> Unit)? = null
 
@@ -25,9 +22,8 @@ object UserDataBase {
 
     fun addUser(user: User): Task<Void> = database.push().setValue(user)
 
-    // TODO change hashMap to user type
-    fun updateUserData(kay: String, map: Map<String, String>): Task<Void> {
-        return database.child(kay).updateChildren(map)
+    fun updateUserData(kay: User, map: Map<String, String>): Task<Void> {
+        return database.child(kay.userId.toString()).updateChildren(map)
     }
 
     fun getUsers(resultCallback: (List<User>) -> Unit) {
@@ -77,6 +73,10 @@ object UserDataBase {
             }
         }
         return userList
+    }
+
+    companion object{
+        private const val USERS = "users"
     }
 }
 
