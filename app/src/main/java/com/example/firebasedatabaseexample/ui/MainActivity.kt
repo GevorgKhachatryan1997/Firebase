@@ -36,11 +36,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnUpdate?.setOnClickListener {
-            val map = mapOf("name" to etName?.text.toString(), "lastname" to etLastName?.text.toString())
-
-            userDataBase.getUsers {usersList ->
-                usersList.forEach {user ->
-                    userDataBase.updateUserData(user, map).addOnSuccessListener {
+            userDataBase.getUsers { usersList ->
+                usersList.forEach { user ->
+                    userDataBase.updateUserData(
+                        user,
+                        etName?.text.toString(),
+                        etLastName?.text.toString()
+                    ).addOnSuccessListener {
                         Toast.makeText(this, "user data update", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -69,7 +71,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRecycleView() {
-        userRecycleView = findViewById<RecyclerView>(R.id.userRecyclerView).apply {
+        userRecycleView = findViewById<
+                RecyclerView>(R.id.userRecyclerView).apply {
             val userAdapter = UserAdapter()
             adapter = userAdapter
 
